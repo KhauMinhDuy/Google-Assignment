@@ -12,20 +12,24 @@ public class MIP {
 	public static void main(String[] args) {
 		Loader.loadNativeLibraries();
 
+		String[] workers = {"A", "B", "C", "D"};
+		
 		MPSolver solver = MPSolver.createSolver("SCIP");
 		if (solver == null) {
 			return;
 		}
 
-		int[][] costs = { 
-				{ 18, 52, 64, 39 },
-				{ 75, 55, 19, 48 },
-				{ 35, 57, 8, 65 },
-				{ 27, 25, 14, 16 }
+	
+		
+		int[] costs = { 
+				 18, 52, 64, 39, 
+				 75, 55, 19, 48, 
+				 35, 57, 8, 65, 
+				 27, 25, 14, 16, 
 			};
 		
-		int numWorkers = costs.length;
-		int numTasks = costs[0].length;
+		int numWorkers = workers.length;
+		int numTasks = 4;
 		
 		MPVariable[][] variables = new MPVariable[numWorkers][numTasks];
 		
@@ -38,11 +42,11 @@ public class MIP {
 		System.out.println("Number of Variables: " + solver.numVariables());
 		
 		for(int i = 0; i < numWorkers; i++) {
-			MPConstraint constraint = solver.makeConstraint(0, 1, "");
-			MPConstraint constraint2 = solver.makeConstraint(1, 1, "");
+			MPConstraint constraint_row = solver.makeConstraint(0, 1, "");
+			MPConstraint constraint_column = solver.makeConstraint(1, 1, "");
 			for(int j = 0; j < numTasks; j++) {
-				constraint.setCoefficient(variables[i][j], 1);
-				constraint2.setCoefficient(variables[j][i], 1);
+				constraint_row.setCoefficient(variables[i][j], 1);
+				constraint_column.setCoefficient(variables[j][i], 1);
 			}
 		}
 		
@@ -58,7 +62,7 @@ public class MIP {
 		MPObjective objective = solver.objective();
 		for(int i = 0; i < numWorkers; i++) {
 			for(int j = 0; j < numTasks; j++) {
-				objective.setCoefficient(variables[i][j], costs[i][j]);
+				objective.setCoefficient(variables[i][j], costs[i * numTasks + j]);
 			}
 		}
 		
@@ -70,7 +74,7 @@ public class MIP {
 			for(int i = 0; i < numWorkers; i++) {
 				for(int j = 0; j < numTasks; j++) {
 					if(variables[i][j].solutionValue() == 1) {
-						System.out.println("Worker " + i + " assigned to task " + j + ".  Cost = " + costs[i][j]);
+						System.out.println("Worker " + workers[i] + " assigned to task " + (j+1) + ".  Cost = " + costs[i * numTasks + j]);
 					}
 				}
 			}
