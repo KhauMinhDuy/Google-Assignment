@@ -39,17 +39,19 @@ public class MIP {
 		
 		for(int i = 0; i < numWorkers; i++) {
 			MPConstraint constraint = solver.makeConstraint(0, 1, "");
+			MPConstraint constraint2 = solver.makeConstraint(1, 1, "");
 			for(int j = 0; j < numTasks; j++) {
 				constraint.setCoefficient(variables[i][j], 1);
+				constraint2.setCoefficient(variables[j][i], 1);
 			}
 		}
 		
-		for(int j = 0; j < numTasks; j++) {
-			MPConstraint constraint = solver.makeConstraint(1, 1, "");
-			for(int i = 0; i < numWorkers; i++) {
-				constraint.setCoefficient(variables[i][j], 1);
-			}
-		}
+//		for(int j = 0; j < numTasks; j++) {
+//			MPConstraint constraint = solver.makeConstraint(1, 1, "");
+//			for(int i = 0; i < numWorkers; i++) {
+//				constraint.setCoefficient(variables[i][j], 1);
+//			}
+//		}
 		
 		System.out.println("Number of Constraints : " + solver.numConstraints());
 		
@@ -72,6 +74,8 @@ public class MIP {
 					}
 				}
 			}
+		} else {
+			System.out.println("No solution found");
 		}
 	}
 
