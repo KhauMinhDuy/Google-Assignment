@@ -14,20 +14,18 @@ public class MIP {
 
 		String[] workers = {"A", "B", "C", "D"};
 		
+		int[] costs = { 
+			 18, 52, 64, 39, 
+			 75, 55, 19, 48, 
+			 35, 57, 8, 65, 
+			 27, 25, 14, 16, 
+		};
+		
 		MPSolver solver = MPSolver.createSolver("SCIP");
 		if (solver == null) {
 			return;
 		}
 
-	
-		
-		int[] costs = { 
-				 18, 52, 64, 39, 
-				 75, 55, 19, 48, 
-				 35, 57, 8, 65, 
-				 27, 25, 14, 16, 
-			};
-		
 		int numWorkers = workers.length;
 		int numTasks = 4;
 		
